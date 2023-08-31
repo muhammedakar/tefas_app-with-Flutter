@@ -121,7 +121,7 @@ class _PortfolioWidState extends State<PortfolioWid> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Portföyümm",
+            "Portföyüm",
             style: AppConstants.titleTs,
           ),
           TextButton(
