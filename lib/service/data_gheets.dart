@@ -24,15 +24,20 @@ class DataGsheets {
   final gshhet = GSheets(_credantials);
 
   Future<List<DataGsheetsData>> getData() async {
-    final ss = await gshhet.spreadsheet(spreadSheetID);
+    try {
+      final ss = await gshhet.spreadsheet(spreadSheetID);
 
-    var sheet = ss.worksheetByTitle("Sheet1");
-    List data = await sheet!.values.allRows(fromRow: 2);
+      var sheet = ss.worksheetByTitle("Sheet1");
+      List data = await sheet!.values.allRows(fromRow: 2);
 
-    List<DataGsheetsData> result = data.map<DataGsheetsData>((e) {
-      return DataGsheetsData.fromJson(e);
-    }).toList();
+      List<DataGsheetsData> result = data.map<DataGsheetsData>((e) {
+        return DataGsheetsData.fromJson(e);
+      }).toList();
 
-    return result;
+      return result;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 }
