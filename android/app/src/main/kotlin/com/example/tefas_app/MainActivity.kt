@@ -1,4 +1,4 @@
-package com.example.tefas_app
+package com.mrakar.tefas_app
 
 import io.flutter.embedding.android.FlutterActivity
 
