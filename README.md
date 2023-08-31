@@ -1,16 +1,27 @@
-# tefas_app
+# Wealth funds with TEFAS data
 
-A new Flutter project.
+Hello, I am Muhammed AKAR i have been dealing with **flutter** for a year this is one of my projects. We can use **Tefas** data on the application with this application, I used **Google Docs as API** while making this application, I am waiting for your comments. 🫡
 
-## Getting Started
+### Connect with me:
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+<a href="https://www.linkedin.com/in/muhammed-akar-9a0036155/"><img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" align="left" height="24" width="24" ></a>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<a href="https://stackoverflow.com/users/15971548/muhammed-akar"><img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/stack-overflow.svg" align="left" height="24" width="24" ></a>  
+<br/><br/>
+***
+![Wealth Funds With TEFAS Data](https://github.com/muhammedakar/tefas_app-with-Flutter/assets/99355169/1cb2ef08-c9f8-4ecf-baee-8033922237bd)
+## Configure:
+you need to take a api-token from https://docs.google.com/spreadsheets
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    ``final spreadSheetID = 'Your Spread sheet ID';``
+
+this code is in Lib>service>data_gheets.dart
+
+## Build
+
+you need to write the following code block in your terminal
+
+    ``flutter build apk``
+
+Finally you can find this app on this path
