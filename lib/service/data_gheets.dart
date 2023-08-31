@@ -19,7 +19,7 @@ class DataGsheets {
 }
  ''';
 
-  final spreadSheetID = "17iSwdAJDMHiKiJZVSpqf7IeirW8__TNrhwdlYx5LIhQ";
+  final spreadSheetID = "Your Spread sheet ID";
 
   final gshhet = GSheets(_credantials);
 
