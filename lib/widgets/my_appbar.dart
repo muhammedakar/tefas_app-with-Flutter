@@ -47,7 +47,7 @@ class MyAppBar extends StatelessWidget {
                 child: Center(
                   child: IconButton(
                     onPressed: () => LocalService.alertDialog(list, context),
-                    icon: Icon(Icons.add,
+                    icon: const Icon(Icons.add,
                         size: 35, color: AppConstants.primaryColor),
                   ),
                 ),

@@ -137,11 +137,11 @@ class _AlertDialogWidState extends State<AlertDialogWid> {
                   int? index;
                   index = list.indexWhere((element) => element.fonKodu == kod);
 
-                  list.forEach((element) {
+                  for (var element in list) {
                     if (element.fonKodu == kod) {
                       check = true;
                     }
-                  });
+                  }
 
                   if (check) {
                     var updateData = LocaleDataModel.addData(

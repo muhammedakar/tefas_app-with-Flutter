@@ -36,7 +36,6 @@ class DataGsheets {
 
       return result;
     } catch (e) {
-      print(e);
       return [];
     }
   }
