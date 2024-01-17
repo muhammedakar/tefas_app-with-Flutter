@@ -23,7 +23,7 @@ class _AddFonPageState extends ConsumerState<AddFonPage> with AddFonPageMix {
       appBar: AppBar(
         backgroundColor: Clr.primary.shade50,
         title: Text(
-          'Fon Ekle',
+        'Fon Ekle',
           style: Theme.of(context)
               .textTheme
               .headlineMedium!
