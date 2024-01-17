@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_switch/flutter_switch.dart';
-import 'package:tefas_app/constants/app_constants.dart';
-import 'package:tefas_app/models/gheet_data_model.dart';
-import 'package:tefas_app/service/data_gheets.dart';
-import 'package:tefas_app/widgets/my_appbar.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:tefas_app/ads/widget/banner_widget.dart';
+import 'package:tefas_app/constants/color_constant.dart';
+import 'package:tefas_app/mixin/home_page_mix.dart';
+import 'package:tefas_app/widgets/currency_wid.dart';
+import 'package:tefas_app/widgets/float_button.dart';
+import 'package:tefas_app/widgets/pie_chart_wid.dart';
 import 'package:tefas_app/widgets/portfolio_wid.dart';
-import 'package:tefas_app/widgets/top_risers.dart';
-import 'package:tefas_app/widgets/total_result_wid.dart';
+import 'package:tefas_app/widgets/top_risers_wid.dart';
+import 'package:tefas_app/widgets/total_result.dart';
+import '../models/gheet_data_model.dart';
+import '../models/locale_data_model.dart';
+import '../widgets/drawer_wid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,114 +21,140 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  late final DataGsheets _dataGsheets;
-  late Future<List<DataGsheetsData>> listData = _dataGsheets.getData();
-  bool switchValue = true;
-  @override
-  void initState() {
-    _dataGsheets = DataGsheets();
-    super.initState();
-  }
-
+class _HomePageState extends State<HomePage> with HomePageMix {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppConstants.primaryColor,
-      body: RefreshIndicator(
-        backgroundColor: AppConstants.secondaryColor,
-        color: AppConstants.thirdColor,
-        strokeWidth: 3,
-        onRefresh: _refresh,
-        child: SafeArea(
-          child: FutureBuilder<List<DataGsheetsData>>(
-              future: _dataGsheets.getData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List<DataGsheetsData>? result = snapshot.data;
-
-                  return Column(
-                    children: [
-                      MyAppBar(
-                        list: result!,
-                      ),
-                      Divider(
-                        thickness: 4.h,
-                        endIndent: 45.w,
-                        indent: 45.w,
-                        color: Colors.white,
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: ListView(
+    return FutureBuilder(
+        future: dataGsheets.getData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<DataGsheetsData>? result = snapshot.data;
+            return Scaffold(
+              drawer: const DrawerWid(),
+              floatingActionButton: FloatButtonWid(result: result),
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                automaticallyImplyLeading: false,
+                elevation: 0,
+                centerTitle: true,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Builder(builder: (context) {
+                      return GestureDetector(
+                          onTap: () => Scaffold.of(context).openDrawer(),
+                          child: SvgPicture.asset(
+                            'assets/images/menu.svg',
+                            color: Clr.primary,
+                          ));
+                    }),
+                    Text(
+                      'FON PORTFÖY',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(
+                              fontWeight: FontWeight.bold, color: Clr.primary),
+                    ),
+                    SvgPicture.asset(
+                      'assets/images/menu.svg',
+                      color: Colors.transparent,
+                    ),
+                  ],
+                ),
+              ),
+              body: FutureBuilder(
+                  future: localService.getAllList(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<LocaleDataModel>? portfolio = snapshot.data;
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                            const BannerAdWid(),
+                            SizedBox(
+                              height: 350.h,
+                              width: double.infinity,
+                              child: Column(
                                 children: [
-                                  AppConstants.titlesText("Bilanço"),
-                                  switchBuilder()
+                                  CurrencyWid(
+                                    data: result!,
+                                  ),
+                                  Expanded(
+                                      child: PageView(
+                                    onPageChanged: (value) => setState(() {
+                                      currentPage = value;
+                                    }),
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Clr.primary.shade50,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: PieChartWid(
+                                          portfolio: portfolio!,
+                                          result: result,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: TotalResult(
+                                          result: result,
+                                          portfolio: portfolio,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                                  SizedBox(
+                                    height: 10,
+                                    child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: buildIndicator(),
+                                        )),
+                                  ),
                                 ],
                               ),
                             ),
-                            TotalResultWid(
-                                list: result, switchValue: switchValue),
-                            PortfolioWid(
-                              result: result,
-                              switchValue: switchValue,
+                            const SizedBox(
+                              height: 12,
                             ),
-                            Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: AppConstants.titlesText(
-                                    "En çok değerlenenler")),
-                            TopRisersWid(result: result, sort: true),
-                            Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: AppConstants.titlesText(
-                                    "En çok değer kaybedenler")),
-                            TopRisersWid(result: result, sort: false),
+                            const TabBar(tabs: [
+                              Text('Portföyüm'),
+                              Text('Yükselenler'),
+                              Text('Düşenler'),
+                            ]),
+                            Expanded(
+                              child: TabBarView(children: [
+                                PortfolioWid(
+                                  result: result,
+                                  portfolio: portfolio,
+                                ),
+                                TopRisersWid(result: result, sort: true),
+                                TopRisersWid(result: result, sort: false),
+                              ]),
+                            )
                           ],
                         ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-        ),
-      ),
-    );
-  }
-
-  FlutterSwitch switchBuilder() {
-    return FlutterSwitch(
-      value: switchValue,
-      onToggle: (value) => setState(() {
-        switchValue = value;
-      }),
-      activeColor: AppConstants.secondaryColor,
-      toggleColor: AppConstants.primaryColor,
-      inactiveColor: AppConstants.thirdColor,
-      inactiveIcon: Image.asset(
-        AppConstants.dollarPath,
-        color: Colors.white,
-      ),
-      activeIcon: Image.asset(
-        AppConstants.tlPath,
-        color: Colors.white,
-        fit: BoxFit.fill,
-      ),
-    );
-  }
-
-  Future<void> _refresh() async {
-    return Future.delayed(const Duration(seconds: 2))
-        .whenComplete(() => setState(() {}));
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
+            );
+          } else {
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
+          }
+        });
   }
 }
